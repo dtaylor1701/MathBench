@@ -1,4 +1,4 @@
-extension Matrix where T: Numeric {
+public extension Matrix where T: Numeric {
     
     init(_ rows: Int, _ columns: Int) {
         let zero: T = 0
@@ -14,33 +14,32 @@ extension Matrix where T: Numeric {
         }
     }
     
-    static func + (left: Matrix<T>, right: Matrix<T>) -> Matrix<T>? {
-        return combine(left: left, right: right, action: +)
+    static func + (left: Matrix<T>, right: Matrix<T>) throws -> Matrix<T> {
+        return try combine(left: left, right: right, action: +)
     }
     
-    static func - (left: Matrix<T>, right: Matrix<T>) -> Matrix<T>? {
-        return combine(left: left, right: right, action: -)
+    static func - (left: Matrix<T>, right: Matrix<T>) throws -> Matrix<T> {
+        return try combine(left: left, right: right, action: -)
     }
     
-    static func * (left: Matrix<T>, right: Matrix<T>) -> Matrix<T>? {
-        if left.rowLength != right.columnLength { return nil }
+    static func * (left: Matrix<T>, right: Matrix<T>) throws -> Matrix<T> {
+        if left.columnCount != right.rowCount { throw ComputationalError.mismatchedDimensions }
         
         var arr: [[T]] = []
         
-        for i in 0..<left.columnLength {
+        for i in 0..<left.rowCount {
             arr.append([])
-            for j in 0..<right.rowLength {
-                guard let dot = left.row(i) * right.column(j) else { return nil }
+            for j in 0..<right.columnCount {
+                let dot = try left.row(i) * right.column(j)
                 arr[i].append(dot)
             }
         }
         return Matrix(arr)
     }
     
-    static func determinant(_ matrix: Matrix<T>) -> T? {
-        if matrix.rowLength != matrix.columnLength {
-            return nil }
-        switch matrix.rowLength {
+    static func determinant(_ matrix: Matrix<T>) throws -> T {
+        if !matrix.isSquare { throw ComputationalError.squareMatrixRequired }
+        switch matrix.columnCount {
         case 0:
             return 0
         case 1:
@@ -49,10 +48,10 @@ extension Matrix where T: Numeric {
             return matrix[0,0] * matrix[1,1] - matrix[0,1] * matrix[1,0]
         default:
             var results: [T] = []
-            for i in 0..<matrix.rowLength {
+            for i in 0..<matrix.columnCount {
                 var minor: [[T]] = [[]]
                 minor = matrix.value[1...].map({ [T]($0[0..<i] + $0[(i+1)...]) })
-                guard let det = determinant(Matrix(minor)) else { return nil }
+                let det = try determinant(Matrix(minor))
                 results.append(matrix[0,i] * det)
             }
             var result = results[0]
@@ -69,12 +68,15 @@ extension Matrix where T: Numeric {
         }
     }
     
-    func gramian() -> Matrix<T>? {
-        return self * self.transpose()
+    /// https://en.wikipedia.org/wiki/Gramian_matrix
+    ///
+    /// - Returns: The gramian matrix
+    func gramian() throws -> Matrix<T> {
+        return try self.transpose() * self
     }
     
-    func det() -> T? {
-        return Matrix.determinant(self)
+    func det() throws -> T {
+        return try Matrix.determinant(self)
     }
     
 }

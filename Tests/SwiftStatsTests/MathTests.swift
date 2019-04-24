@@ -1,12 +1,12 @@
 import XCTest
-@testable import SwiftStats
+import SwiftStats
 
 class MathTests: XCTestCase {
     func testDotProduct(){
         let a = [3,4,5,6]
         let b = [4,2,4,5]
 
-        let res = a * b
+        let res = try? a * b
         XCTAssertEqual(res, 70)
     }
     
@@ -14,7 +14,7 @@ class MathTests: XCTestCase {
         let a = [3,4,5,6]
         let b = [4,2,4,5,3]
         
-        let res = a * b
+        let res = try? a * b
         XCTAssertEqual(res, nil)
     }
 }

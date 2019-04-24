@@ -1,12 +1,12 @@
 import XCTest
-@testable import SwiftStats
+import SwiftStats
 
 class LUDecompositionTests: XCTestCase {
     func testDecomposition3x3() {
         let a = Matrix<Double>([2,-1,-2],
                                [-4,6,3],
                                [-4,-2,8])
-        guard let lu = LUDecomposition(a) else {
+        guard let lu = try? LUDecomposition(a) else {
             XCTFail()
             return
         }
@@ -22,8 +22,8 @@ class LUDecompositionTests: XCTestCase {
         print("Upper: \n\(lu.upper.printString())")
         print("Lower: \n\(lu.lower.printString())")
         print("Pivot: \n\(lu.p.printString())")
-        let pa = lu.p * a
-        let luMat = lu.lower * lu.upper
+        let pa = try? lu.p * a
+        let luMat = try? lu.lower * lu.upper
         XCTAssertEqual(pa, luMat)
         
         XCTAssertEqual(expectedP, lu.p)
@@ -34,7 +34,7 @@ class LUDecompositionTests: XCTestCase {
     func testDecomposition2x2() {
         let a = Matrix<Double>([4,1],
                                [2,1])
-        guard let lu = LUDecomposition(a) else {
+        guard let lu = try? LUDecomposition(a) else {
             XCTFail()
             return
         }
@@ -47,8 +47,8 @@ class LUDecompositionTests: XCTestCase {
         print("Upper: \n\(lu.upper.printString())")
         print("Lower: \n\(lu.lower.printString())")
         print("Pivot: \n\(lu.p.printString())")
-        let pa = lu.p * a
-        let luMat = lu.lower * lu.upper
+        let pa = try? lu.p * a
+        let luMat = try? lu.lower * lu.upper
         XCTAssertEqual(pa, luMat)
         
         XCTAssertEqual(expectedP, lu.p)
@@ -60,7 +60,7 @@ class LUDecompositionTests: XCTestCase {
         let a = Matrix<Double>([7,1,1],
                                [0,6,1],
                                [0,0,5])
-        guard let lu = LUDecomposition(a) else {
+        guard let lu = try? LUDecomposition(a) else {
             XCTFail()
             return
         }
@@ -76,8 +76,8 @@ class LUDecompositionTests: XCTestCase {
         print("Upper: \n\(lu.upper.printString())")
         print("Lower: \n\(lu.lower.printString())")
         print("Pivot: \n\(lu.p.printString())")
-        let pa = lu.p * a
-        let luMat = lu.lower * lu.upper
+        let pa = try? lu.p * a
+        let luMat = try? lu.lower * lu.upper
         XCTAssertEqual(pa, luMat)
         
         XCTAssertEqual(expectedP, lu.p)

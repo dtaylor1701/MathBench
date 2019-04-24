@@ -1,12 +1,12 @@
-struct LUDecomposition<T> where T: FloatingPoint {
-    let upper: Matrix<T>
-    let lower: Matrix<T>
-    let p: Matrix<T>
-    let exchanges: Int
+public struct LUDecomposition<T> where T: FloatingPoint {
+    public let upper: Matrix<T>
+    public let lower: Matrix<T>
+    public let p: Matrix<T>
+    public let exchanges: Int
     
-    init?(_ matrix: Matrix<T>) {
-        if matrix.rowLength != matrix.columnLength { return nil }
-        let n = matrix.rowLength
+    public init(_ matrix: Matrix<T>) throws {
+        if matrix.columnCount != matrix.rowCount { throw ComputationalError.squareMatrixRequired }
+        let n = matrix.columnCount
         var matrix = matrix
         var upper = Matrix<T>(n,n)
         var lower = Matrix<T>(n,n)
@@ -47,7 +47,7 @@ struct LUDecomposition<T> where T: FloatingPoint {
             // Upper Triangular
             for j in i..<n {
                 //Lower row i * Upper row j
-                guard let dot = lower.row(i) * upper.column(j) else { return nil }
+                let dot = try lower.row(i) * upper.column(j)
                 // Evaluating U(i, j)
                 upper[i,j] = matrix[i,j] - dot
             }
@@ -58,7 +58,7 @@ struct LUDecomposition<T> where T: FloatingPoint {
                     lower[i,i] = 1 // Diagonal as 1
                 } else {
                     //Lower row j * Upper row i
-                    guard let dot = lower.row(j) * upper.column(i) else { return nil }
+                    let dot = try lower.row(j) * upper.column(i)
                     
                     // Evaluating L(k, i)
                     lower[j,i] = (matrix[j,i] - dot) / upper[i,i]
