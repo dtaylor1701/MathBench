@@ -2,7 +2,11 @@ import Foundation
 
 public struct Regression<T> where T: FloatingPoint {
     
+    public let x: Matrix<T>
+    public let y: Matrix<T>
+    
     public let residuals: Matrix<T>
+    /// Coeffecients
     public let beta: Matrix<T>
     /// Total sum of squares
     public let predicted: Matrix<T>
@@ -14,6 +18,8 @@ public struct Regression<T> where T: FloatingPoint {
     public let rSquared: T
     
     public init(x: Matrix<T>, y: Matrix<T>) throws {
+        self.x = x
+        self.y = y
         if x.rowCount != y.rowCount { throw ComputationalError.mismatchedDimensions }
         let n = x.rowCount
         let p = x.columnCount
@@ -23,7 +29,7 @@ public struct Regression<T> where T: FloatingPoint {
         beta = try Regression.beta(for: x, given: y)
         residuals = try Regression.risiduals(of: beta, for: x, given: y)
         predicted = try x * beta
-
+        
         let rss: T = predicted.column(0).map({ square($0 - mean) }).reduce(0, +)
         let tss: T = y.column(0).map({ square($0 - mean) }).reduce(0, +)
         

@@ -74,4 +74,10 @@ public struct Matrix<T: Comparable>: Equatable {
         }
         return result
     }
+    
+    mutating func swap(row firstIndex: Int, with secondIndex: Int) {
+        let temp = value[firstIndex]
+        value[firstIndex] = value[secondIndex]
+        value[secondIndex] = temp
+    }
 }

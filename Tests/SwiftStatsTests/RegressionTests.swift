@@ -82,6 +82,8 @@ class RegressionTests: XCTestCase {
         do {
             let r = try Regression(x: x, y: weight)
             print(r)
+            print(r.csv())
+            print(r.csvX())
         } catch(let error) {
             print(error)
         }

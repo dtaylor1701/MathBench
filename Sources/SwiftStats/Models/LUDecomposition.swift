@@ -4,12 +4,12 @@ public struct LUDecomposition<T> where T: FloatingPoint {
     public let p: Matrix<T>
     public let exchanges: Int
     
-    public init(_ matrix: Matrix<T>) throws {
-        if matrix.columnCount != matrix.rowCount { throw ComputationalError.squareMatrixRequired }
-        let n = matrix.columnCount
-        var matrix = matrix
-        var upper = Matrix<T>(n,n)
-        var lower = Matrix<T>(n,n)
+    public init(_ m: Matrix<T>) throws {
+        if m.columnCount != m.rowCount { throw ComputationalError.squareMatrixRequired }
+        let n = m.columnCount
+        var matrix = m
+        var upper = Matrix<T>(identityWithSize: n)
+        var lower = Matrix<T>(identityWithSize: n)
         var p = Matrix<T>(identityWithSize: n)
         var exchanges = 0
         
@@ -22,47 +22,42 @@ public struct LUDecomposition<T> where T: FloatingPoint {
             var row = i
             for r in i..<n {
                 var thisU = matrix[r,i]
-                var q = 0
-                while q < i {
+                for q in 0..<i {
                     thisU -= matrix[r,q] * matrix[q,r]
-                    q += 1
                 }
                 if abs(thisU) > maxU {
                     maxU = abs(thisU)
                     row = r
                 }
             }
+            
             if row != i {
                 exchanges += 1
-                for q in 0..<n {
-                    var temp = p[i,q]
-                    p[i,q] = p[row,q]
-                    p[row,q] = temp
-                    temp = matrix[i,q]
-                    matrix[i,q] = matrix[row,q]
-                    matrix[row,q] = temp
-                }
+                matrix.swap(row: i, with: row)
+                p.swap(row: i, with: row)
             }
-            
-            // Upper Triangular
-            for j in i..<n {
-                //Lower row i * Upper row j
-                let dot = try lower.row(i) * upper.column(j)
-                // Evaluating U(i, j)
-                upper[i,j] = matrix[i,j] - dot
-            }
-            
-            // Lower Triangular
-            for j in i..<n {
-                if (i == j) {
-                    lower[i,i] = 1 // Diagonal as 1
-                } else {
-                    //Lower row j * Upper row i
-                    let dot = try lower.row(j) * upper.column(i)
-                    
-                    // Evaluating L(k, i)
-                    lower[j,i] = (matrix[j,i] - dot) / upper[i,i]
+        }
+        for i in 0..<n {
+            var j = i
+            while (j<n) { //Determine U across row i
+                var q = 0;
+                upper[i,j] = matrix[i,j]
+                while (q<i) {
+                    upper[i,j] -= lower[i,q] * upper[q,j]
+                    q += 1
                 }
+                j += 1
+            }
+            j = i+1;
+            while (j<n) { //Determine L down column i
+                var q = 0;
+                lower[j,i] = matrix[j,i];
+                while (q<i) {
+                    lower[j,i] -= lower[j,q] * upper[q,i]
+                    q += 1
+                }
+                lower[j,i] = lower[j,i] / upper[i,i]
+                j += 1
             }
         }
         self.upper = upper

@@ -53,14 +53,16 @@ class LinearEquationsTests: XCTestCase {
 
 
 extension XCTestCase {
-    func matricesEqual<T>(a: Matrix<T>?, b: Matrix<T>?, accuracy: T) where T: FloatingPoint {
+    func matricesEqual<T>(a: Matrix<T>?, b: Matrix<T>?, accuracy: T, file: String = #file, line: Int = #line) where T: FloatingPoint {
         guard let a = a, let b = b, a.rowCount == b.rowCount && a.columnCount == b.columnCount else {
-            XCTFail("Requires non-nil matrices with the same dimensions")
+            recordFailure(withDescription: "Requires non-nil matrices with the same dimensions", inFile: file, atLine: line, expected: false)
             return
         }
         for i in 0..<a.rowCount {
             for j in 0..<a.columnCount {
-                XCTAssertEqual(a[i,j], b[i,j], accuracy: accuracy)
+                if abs(a[i,j] - b[i,j]) > accuracy {
+                    recordFailure(withDescription: "\(a) is not equal to \(b)", inFile: file, atLine: line, expected: false)
+                }
             }
         }
     }
