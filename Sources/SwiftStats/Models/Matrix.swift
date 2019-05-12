@@ -80,4 +80,25 @@ public struct Matrix<T: Comparable>: Equatable {
         value[firstIndex] = value[secondIndex]
         value[secondIndex] = temp
     }
+    
+    func diagonal() throws -> Matrix<T> {
+        if !isSquare { throw ComputationalError.squareMatrixRequired }
+        var column: [T] = []
+        for i in 0..<rowCount {
+            column.append(self[i,i])
+        }
+        return Matrix<T>(columns: [column])
+    }
+    
+    func map<U>(_ transform: (T) -> U) -> Matrix<U> {
+        var newRows: [[U]] = []
+        for row in value {
+            var thisRow: [U] = []
+            for i in 0..<columnCount {
+                thisRow.append(transform(row[i]))
+            }
+            newRows.append(thisRow)
+        }
+        return Matrix<U>(newRows)
+    }
 }

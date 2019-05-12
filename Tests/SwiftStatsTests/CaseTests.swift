@@ -106,11 +106,61 @@ class CaseTests: XCTestCase {
         let ig = try g.inverse()
         let i = Matrix<Double>(identityWithSize: g.columnCount)
         matricesEqual(a: i, b: try g * ig, accuracy: 0.000001)
-        matricesEqual(a: e, b: g, accuracy: 0.0001)
+        matricesEqual(a: e, b: ig, accuracy: 0.001)
     }
     
+    func testBeta() throws {
+        let eb = Matrix<Double>([128.8128],
+                                [-143.1620],
+                                [61.9603])
+        let r = try Regression(x: x, y: y)
+        
+        matricesEqual(a: eb, b: r.beta, accuracy: 0.0001)
+    }
     
+    func testRSquared() throws {
+        let eR2 = 0.9989
+        let r = try Regression(x: x, y: y)
+
+        XCTAssertEqual(eR2, r.rSquared, accuracy: 0.0001)
+    }
     
+    func testAdjRSquared() throws {
+        let eR = 0.9987
+        let r = try Regression(x: x, y: y)
+        
+        XCTAssertEqual(eR, r.adjRSquared, accuracy: 0.0001)
+    }
+    
+    func testStdErr() throws {
+        let eStdErr = 0.2516
+        let r = try Regression(x: x, y: y)
+        
+        XCTAssertEqual(eStdErr, r.stdError, accuracy: 0.0001)
+    }
+    
+    func testMSS() throws {
+        let eMSS = 692.61
+        let r = try Regression(x: x, y: y)
+        
+        XCTAssertEqual(eMSS, r.mss, accuracy: 0.01)
+    }
+    
+    func testTSS() throws {
+        let eTSS = 693.37
+        let r = try Regression(x: x, y: y)
+        
+        XCTAssertEqual(eTSS, r.tss, accuracy: 0.01)
+    }
+    
+    func testStdErrCoef() throws {
+        let e = Matrix<Double>([16.3083],
+                               [19.8332],
+                               [6.0084])
+        let r = try Regression(x: x, y: y)
+        
+        matricesEqual(a: e, b: r.varB, accuracy: 0.0001)
+    }
     
 }
 

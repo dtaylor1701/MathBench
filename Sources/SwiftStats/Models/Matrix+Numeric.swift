@@ -37,6 +37,16 @@ public extension Matrix where T: Numeric {
         return Matrix(arr)
     }
     
+    static func * (left: T, right: Matrix<T>) -> Matrix<T> {
+        var result = Matrix<T>(right.rowCount, right.columnCount)
+        for i in 0..<right.rowCount {
+            for j in 0..<right.columnCount {
+                result[i,j] = left * right[i,j]
+            }
+        }
+        return result
+    }
+    
     static func determinant(_ matrix: Matrix<T>) throws -> T {
         if !matrix.isSquare { throw ComputationalError.squareMatrixRequired }
         switch matrix.columnCount {
