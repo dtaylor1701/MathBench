@@ -38,26 +38,18 @@ public struct LUDecomposition<T> where T: FloatingPoint {
             }
         }
         for i in 0..<n {
-            var j = i
-            while (j<n) { //Determine U across row i
-                var q = 0;
+            for j in i..<n { //Determine U across row i
                 upper[i,j] = matrix[i,j]
-                while (q<i) {
+                for q in 0..<i {
                     upper[i,j] -= lower[i,q] * upper[q,j]
-                    q += 1
                 }
-                j += 1
             }
-            j = i+1;
-            while (j<n) { //Determine L down column i
-                var q = 0;
+            for j in (i+1)..<n { //Determine L down column i
                 lower[j,i] = matrix[j,i];
-                while (q<i) {
+                for q in 0..<i {
                     lower[j,i] -= lower[j,q] * upper[q,i]
-                    q += 1
                 }
                 lower[j,i] = lower[j,i] / upper[i,i]
-                j += 1
             }
         }
         self.upper = upper
