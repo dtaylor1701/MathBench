@@ -2,7 +2,7 @@ import XCTest
 import SwiftStats
 
 class RegressionTests: XCTestCase {
-    func testFindBeta() {
+    func testFindBeta() throws {
         let y = Matrix<Double>([4],
                                [6],
                                [8])
@@ -10,19 +10,21 @@ class RegressionTests: XCTestCase {
                                [0,2,0],
                                [0,0,2])
         
-        let r = try? Regression(x: a, y: y)
         let expectedB = Matrix<Double>([2],
                                       [3],
                                       [4])
         let expectedR = Matrix<Double>([0],
                                        [0],
                                        [0])
-        XCTAssertEqual(expectedB, r?.beta)
-        XCTAssertEqual(expectedR, r?.residuals)
-        XCTAssertEqual(1, r?.rSquared)
+
+        let beta = try Regression.beta(for: a, given: y)
+        let residuals = try Regression.risiduals(of: beta, for: a, given: y)
+
+        XCTAssertEqual(expectedB, beta)
+        XCTAssertEqual(expectedR, residuals)
     }
     
-    func testRegressionAgain() {
+    func testRegressionAgain() throws {
         let y = Matrix<Double>([4],
                                [6],
                                [8],
@@ -40,8 +42,8 @@ class RegressionTests: XCTestCase {
                                [7,2,23],
                                [3,2,53],
                                [4,2,43])
-        let r = try? Regression(x: a, y: y)
-        print(r?.beta)
+        let beta = try Regression.beta(for: a, given: y)
+        XCTAssertNotNil(beta)
     }
     
     func testRegression() throws {

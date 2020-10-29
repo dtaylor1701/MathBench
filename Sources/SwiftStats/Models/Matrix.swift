@@ -1,7 +1,7 @@
 import Foundation
 
 public struct Matrix<T: Comparable>: Equatable {
-    public var value: [[T]]
+    public private(set) var value: [[T]]
     public let columnCount: Int
     public let rowCount: Int
     
@@ -75,13 +75,13 @@ public struct Matrix<T: Comparable>: Equatable {
         return result
     }
     
-    mutating func swap(row firstIndex: Int, with secondIndex: Int) {
+    public mutating func swap(row firstIndex: Int, with secondIndex: Int) {
         let temp = value[firstIndex]
         value[firstIndex] = value[secondIndex]
         value[secondIndex] = temp
     }
     
-    func diagonal() throws -> Matrix<T> {
+    public func diagonal() throws -> Matrix<T> {
         if !isSquare { throw ComputationalError.squareMatrixRequired }
         var column: [T] = []
         for i in 0..<rowCount {
@@ -90,7 +90,7 @@ public struct Matrix<T: Comparable>: Equatable {
         return Matrix<T>(columns: [column])
     }
     
-    func map<U>(_ transform: (T) -> U) -> Matrix<U> {
+    public func map<U>(_ transform: (T) -> U) -> Matrix<U> {
         var newRows: [[U]] = []
         for row in value {
             var thisRow: [U] = []

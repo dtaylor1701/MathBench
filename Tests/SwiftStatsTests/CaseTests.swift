@@ -159,7 +159,7 @@ class CaseTests: XCTestCase {
                                [6.0084])
         let r = try Regression(x: x, y: y)
         
-        matricesEqual(a: e, b: r.varB, accuracy: 0.0001)
+        matricesEqual(a: e, b: r.stdErrorOfCoeff, accuracy: 0.0001)
     }
     
 }

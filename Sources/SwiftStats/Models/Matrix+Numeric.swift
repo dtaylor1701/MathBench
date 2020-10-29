@@ -46,7 +46,7 @@ public extension Matrix where T: Numeric {
         }
         return result
     }
-    
+
     static func determinant(_ matrix: Matrix<T>) throws -> T {
         if !matrix.isSquare { throw ComputationalError.squareMatrixRequired }
         switch matrix.columnCount {
@@ -88,5 +88,4 @@ public extension Matrix where T: Numeric {
     func det() throws -> T {
         return try Matrix.determinant(self)
     }
-    
 }
