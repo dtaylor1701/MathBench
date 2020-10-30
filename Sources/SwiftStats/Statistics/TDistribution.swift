@@ -19,4 +19,22 @@ public struct TDistribution<T> where T: BinaryFloatingPoint {
 
         return numeratorGamma / denominator
     }
+
+    /// Approximates the cummulative probability of some value `t`
+    /// being greater than or equal to a random value in the distribution. (two-tailed p-value)
+    /// - Parameters:
+    ///   - t: The value in question.
+    ///   - n: Degrees of the variate.
+    /// - Returns: The probability that a random value would be great than or equal to `t`.
+    public static func cumulativeProbability(for t: T, n: Int) -> T {
+
+        let betaX = T(n) / (T(n) + t * t)
+        let incompleteBeta = incompleteBetaFunction(for: betaX, a: T(n) / T(2), b: 0.5)
+        let beta: T = (oneHalfGamma(n) * oneHalfGamma(1)) / (oneHalfGamma(n + 1))
+        let regularized = incompleteBeta / beta
+
+        let totalProbability = 1.0 - 0.5 * regularized
+
+        return (1 - totalProbability) * 2
+    }
 }

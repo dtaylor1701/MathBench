@@ -73,7 +73,6 @@ public struct Regression<T> where T: BinaryFloatingPoint {
 
         let v1 = p - 1
         let v2 = df
-
         probability = FDistribution.cumulativeProbability(for: fStat, n: v1, m: v2)
 
         // Adjusted R Squared
@@ -86,8 +85,7 @@ public struct Regression<T> where T: BinaryFloatingPoint {
         let tValues = try beta.column(0).asVector() * stdErrorOfCoeff.column(0).map { 1 / $0 }.asVector()
         tValuesOfCoeff = tValues.asComlumnMatrix()
 
-        let r = n - 1
-        let pValues = tValues.value.map { TDistribution.probability(for: $0, df: r) }
+        let pValues = tValues.value.map { TDistribution.cumulativeProbability(for: $0, n: v2) }
 
         pValuesOfCoeff = Matrix(columns: [pValues])
     }

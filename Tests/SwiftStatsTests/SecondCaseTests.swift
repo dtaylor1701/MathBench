@@ -199,13 +199,10 @@ class SecondCaseTests: XCTestCase {
     }
 
     func testPValues() throws {
-        let e = Matrix([[0.044],
-                        [0.000],
-                        [0.000]])
+        let e = Matrix([[0.044099],
+                        [0.00],
+                        [1.881e-4]])
         let r = try Regression(x: x, y: y)
-        matricesEqual(a: r.pValuesOfCoeff, b: e, accuracy: 0.001)
+        matricesEqual(a: r.pValuesOfCoeff, b: e, accuracy: 0.00001)
     }
-
-
-
 }
