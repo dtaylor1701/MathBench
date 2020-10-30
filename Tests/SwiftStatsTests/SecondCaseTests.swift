@@ -187,7 +187,7 @@ class SecondCaseTests: XCTestCase {
         let e = 0.000
 
         let r = try Regression(x: x, y: y)
-        XCTAssertEqual(r.probability, e, accuracy: 0.01)
+        XCTAssertEqual(r.fProbability, e, accuracy: 0.01)
     }
 
     func testTValues() throws {

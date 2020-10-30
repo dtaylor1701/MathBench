@@ -37,16 +37,16 @@ public struct Regression<T> where T: BinaryFloatingPoint {
     public let pValuesOfCoeff: Matrix<T>
     /// Mean Squared Error
     public let mse: T
-    /// F-test
+    /// F-statistic
     /// https://en.wikipedia.org/wiki/F-test
     public let fStat: T
-    /// Probability in the f distribution.
-    public let probability: T
+    /// Probability in the f distribution
+    public let fProbability: T
     
     public init(x: Matrix<T>, y: Matrix<T>) throws {
         self.x = x
         self.y = y
-        if x.rowCount != y.rowCount { throw ComputationalError.mismatchedDimensions }
+        if x.rowCount != y.rowCount { throw MatrixError.mismatchedDimensions }
         let n = x.rowCount
         let p = x.columnCount
         df = n - p
@@ -73,7 +73,7 @@ public struct Regression<T> where T: BinaryFloatingPoint {
 
         let v1 = p - 1
         let v2 = df
-        probability = FDistribution.cumulativeProbability(for: fStat, n: v1, m: v2)
+        fProbability = FDistribution.cumulativeProbability(for: fStat, n: v1, m: v2)
 
         // Adjusted R Squared
         let nAdj: T = T(n - 1) / T(n - p)

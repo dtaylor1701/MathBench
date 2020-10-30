@@ -2,7 +2,7 @@ import Foundation
 
 public extension Matrix where T: FloatingPoint {
     func det(given decomposition: LUDecomposition<T>? = nil) throws -> T {
-        if !isSquare { throw ComputationalError.squareMatrixRequired }
+        if !isSquare { throw MatrixError.squareMatrixRequired }
         let lu = try decomposition ?? LUDecomposition(self)
         var r: T = 1
         for i in 0..<columnCount {
@@ -13,7 +13,7 @@ public extension Matrix where T: FloatingPoint {
     }
     
     func inverse(using lu: LUDecomposition<T>? = nil) throws -> Matrix<T> {
-        if !isSquare { throw ComputationalError.squareMatrixRequired }
+        if !isSquare { throw MatrixError.squareMatrixRequired }
         let lu = try lu ?? LUDecomposition(self)
         let n = self.rowCount
         var columns: [[T]] = []

@@ -32,7 +32,7 @@ public struct Vector<T: Comparable>: Equatable {
 public extension Vector where T: Numeric {
     static func + (left: Vector<T>, right: Vector<T>) throws -> Vector<T> {
         guard left.length == right.length else {
-            throw ComputationalError.mismatchedDimensions
+            throw MatrixError.mismatchedDimensions
         }
         var values: [T] = []
         for i in 0..<left.length {
@@ -43,7 +43,7 @@ public extension Vector where T: Numeric {
 
     static func * (left: Vector<T>, right: Vector<T>) throws -> Vector<T> {
         guard left.length == right.length else {
-            throw ComputationalError.mismatchedDimensions
+            throw MatrixError.mismatchedDimensions
         }
         var values: [T] = []
         for i in 0..<left.length {

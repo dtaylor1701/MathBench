@@ -2,7 +2,7 @@ import XCTest
 import SwiftStats
 
 class MatrixTests: XCTestCase {
-    func testPrint() {
+    func testPrint() throws {
         let matrix = Matrix([0,1,2,3],
                             [4,6,2,7],
                             [9,3,5,2],
@@ -11,7 +11,7 @@ class MatrixTests: XCTestCase {
         print(matrix.printString())
     }
     
-    func testRowLength() {
+    func testRowLength() throws {
         let matrix = Matrix([0,1,2,3],
                             [4,6,2,7],
                             [9,3,5,2],
@@ -21,7 +21,7 @@ class MatrixTests: XCTestCase {
         XCTAssertEqual(matrix.columnCount, 4)
     }
     
-    func testRowLengthUnequal() {
+    func testRowLengthUnequal() throws {
         let matrix = Matrix([0,1,2,3],
                             [4,6,2],
                             [9,3,5,2],
@@ -31,7 +31,7 @@ class MatrixTests: XCTestCase {
         XCTAssertEqual(matrix.columnCount, 3)
     }
     
-    func testColumnLength() {
+    func testColumnLength() throws {
         let matrix = Matrix([0,1,2,3],
                             [4,6,2,7],
                             [9,3,5,2],
@@ -41,7 +41,7 @@ class MatrixTests: XCTestCase {
         XCTAssertEqual(matrix.rowCount, 5)
     }
     
-    func testColumnInit() {
+    func testColumnInit() throws {
         let columns = [[1, 2, 3],
                        [3, 4, 5],
                        [6, 7, 8]]
@@ -52,7 +52,7 @@ class MatrixTests: XCTestCase {
         XCTAssertEqual(expected, a)
     }
     
-    func testTranspose() {
+    func testTranspose() throws {
         let originalMatrix = Matrix([0,1,2,3],
                                     [4,6,2,7],
                                     [9,3,5,2],
@@ -63,7 +63,7 @@ class MatrixTests: XCTestCase {
         XCTAssertEqual(matrix.rowCount, 4)
     }
     
-    func testAdd() {
+    func testAdd() throws {
         let matrix1 = Matrix([0,1,2,3],
                              [4,6,2,7],
                              [9,3,5,2],
@@ -83,7 +83,7 @@ class MatrixTests: XCTestCase {
         XCTAssertEqual(matrix, expectedMatrix)
     }
     
-    func testSubtract() {
+    func testSubtract() throws {
         let matrix1 = Matrix([0,1,2,3],
                              [4,6,2,7],
                              [9,3,5,2],
@@ -104,7 +104,7 @@ class MatrixTests: XCTestCase {
         XCTAssertEqual(matrix, expectedMatrix)
     }
     
-    func testMultiply() {
+    func testMultiply() throws {
         let a = Matrix([2,3],
                        [4,5])
         let b = Matrix([4,5,6,4],
@@ -115,20 +115,20 @@ class MatrixTests: XCTestCase {
         XCTAssertEqual(matrix, expectedResult)
     }
     
-    func testDetTwoXTwo() {
+    func testDetTwoXTwo() throws {
         let a = Matrix([2,3],
                        [4,5])
         let det = try? a.det()
         XCTAssertEqual(det, -2)
     }
     
-    func testDetOneXOne() {
+    func testDetOneXOne() throws {
         let a = Matrix([1])
         
         XCTAssertEqual(try? a.det(), 1)
     }
     
-    func testDetFourXFour() {
+    func testDetFourXFour() throws {
         let a = Matrix([0,1,2],
                        [4,6,2],
                        [9,3,5])
@@ -136,20 +136,20 @@ class MatrixTests: XCTestCase {
         XCTAssertEqual(det, -86)
     }
     
-    func testDetTwoXTwoLU() {
+    func testDetTwoXTwoLU() throws {
         let a = Matrix<Double>([2,3],
                                [4,5])
         let det = try? a.det(given: nil)
         XCTAssertEqual(det, -2)
     }
     
-    func testDetOneXOneLU() {
+    func testDetOneXOneLU() throws {
         let a = Matrix<Double>([1])
         
         XCTAssertEqual(try? a.det(given: nil), 1)
     }
     
-    func testDetFourXFourLU() {
+    func testDetFourXFourLU() throws {
         let a = Matrix<Double>([0,1,2],
                                [4,6,2],
                                [9,3,5])
@@ -157,7 +157,7 @@ class MatrixTests: XCTestCase {
         XCTAssertEqual(det, -86)
     }
     
-    func testSubscriptLU() {
+    func testSubscriptLU() throws {
         let a = Matrix([0,1,2],
                        [4,6,2],
                        [9,3,5])
@@ -173,7 +173,7 @@ class MatrixTests: XCTestCase {
         XCTAssertEqual(a[2,2], 5)
     }
     
-    func testAssignment() {
+    func testAssignment() throws {
         var a = Matrix<Int>(3, 3)
         
         a[0,0] = 8
@@ -186,17 +186,45 @@ class MatrixTests: XCTestCase {
         a[2,1] = 3
         a[2,2] = 5
         
-        XCTAssertEqual(a, Matrix([8,1,2],
-                                 [4,6,2],
-                                 [9,3,5]))
+        XCTAssertEqual(a, Matrix([8, 1, 2],
+                                 [4, 6, 2],
+                                 [9, 3, 5]))
     }
     
-    func testInverse() {
-        let a = Matrix<Double>([2,4],
-                               [2,3])
+    func testInverse() throws {
+        let a = Matrix<Double>([2, 4],
+                               [2, 3])
         let expected = Matrix<Double>([-1.5, 2],
                                       [1, -1])
         let inverse = try? a.inverse()
         matricesEqual(a: expected, b: inverse, accuracy: 0.000001)
+    }
+
+    func testAppendRow() throws {
+        var a = Matrix<Double>([2, 4],
+                               [2, 3])
+
+        let toAppend: [Double] = [1, 2]
+
+        let expected = Matrix<Double>([2, 4],
+                                      [2, 3],
+                                      [1, 2])
+        try a.append(row: toAppend)
+
+        matricesEqual(a: a, b: expected, accuracy: 0.000001)
+    }
+
+    func testAppendColumn() throws {
+        var a = Matrix<Double>([2, 4],
+                               [2, 3])
+
+        let toAppend: [Double] = [1,
+                                  2]
+
+        let expected = Matrix<Double>([2, 4, 1],
+                                      [2, 3, 2])
+        try a.append(column: toAppend)
+
+        matricesEqual(a: a, b: expected, accuracy: 0.000001)
     }
 }

@@ -1,7 +1,7 @@
 public extension Matrix where T: FloatingPoint {
     
     func forwardSolve(_ b: Matrix<T>) throws -> Matrix<T> {
-        guard b.rowCount == self.rowCount else { throw ComputationalError.mismatchedDimensions }
+        guard b.rowCount == self.rowCount else { throw MatrixError.mismatchedDimensions }
         let n = b.rowCount
         var x = Matrix<T>(n,1)
         for i in 0..<n {
@@ -15,7 +15,7 @@ public extension Matrix where T: FloatingPoint {
     }
     
     func backwardSolve(_ b: Matrix<T>) throws -> Matrix<T> {
-        guard b.rowCount == self.rowCount else { throw ComputationalError.mismatchedDimensions }
+        guard b.rowCount == self.rowCount else { throw MatrixError.mismatchedDimensions }
         let n = b.rowCount
         var x = Matrix<T>(n,1)
         for i in (0..<n).reversed() {

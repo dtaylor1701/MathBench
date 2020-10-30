@@ -5,7 +5,7 @@ public struct LUDecomposition<T> where T: FloatingPoint {
     public let exchanges: Int
     
     public init(_ m: Matrix<T>) throws {
-        if m.columnCount != m.rowCount { throw ComputationalError.squareMatrixRequired }
+        if m.columnCount != m.rowCount { throw MatrixError.squareMatrixRequired }
         let n = m.columnCount
         var matrix = m
         var upper = Matrix<T>(identityWithSize: n)

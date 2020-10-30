@@ -23,7 +23,7 @@ public extension Matrix where T: Numeric {
     }
     
     static func * (left: Matrix<T>, right: Matrix<T>) throws -> Matrix<T> {
-        if left.columnCount != right.rowCount { throw ComputationalError.mismatchedDimensions }
+        if left.columnCount != right.rowCount { throw MatrixError.mismatchedDimensions }
         
         var arr: [[T]] = []
         
@@ -48,7 +48,7 @@ public extension Matrix where T: Numeric {
     }
 
     static func determinant(_ matrix: Matrix<T>) throws -> T {
-        if !matrix.isSquare { throw ComputationalError.squareMatrixRequired }
+        if !matrix.isSquare { throw MatrixError.squareMatrixRequired }
         switch matrix.columnCount {
         case 0:
             return 0
@@ -60,7 +60,7 @@ public extension Matrix where T: Numeric {
             var results: [T] = []
             for i in 0..<matrix.columnCount {
                 var minor: [[T]] = [[]]
-                minor = matrix.value[1...].map({ [T]($0[0..<i] + $0[(i+1)...]) })
+                minor = matrix.rows[1...].map({ [T]($0[0..<i] + $0[(i+1)...]) })
                 let det = try determinant(Matrix(minor))
                 results.append(matrix[0,i] * det)
             }
