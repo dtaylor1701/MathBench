@@ -1,9 +1,11 @@
 import Foundation
 
-enum RegressionError: Error {
+public enum RegressionError: Error {
     case insufficientData
 }
 
+/// Generates regression analysis of the form Y = βX + ε.
+/// https://en.wikipedia.org/wiki/Regression_analysis
 public struct Regression<T> where T: BinaryFloatingPoint {
     
     public let x: Matrix<T>
@@ -18,32 +20,37 @@ public struct Regression<T> where T: BinaryFloatingPoint {
     /// Degrees of freedom
     public let df: Int
     /// Standard Error
+    /// https://en.wikipedia.org/wiki/Standard_error
     public let stdError: T
     /// R Squared
+    /// https://en.wikipedia.org/wiki/Coefficient_of_determination
     public let rSquared: T
     /// Adjusted R Squared
+    /// https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2
     public let adjRSquared: T
     /// Model Sum of Squares
-    public let mss: T
+    public let modelSumOfSquares: T
     /// Total Sum of Suares
-    public let tss: T
+    public let totalSumOfSquares: T
     /// Error some of squares
-    public let ess: T
+    public let errorSumOfSquares: T
     /// Standard error of the coefficients
     public let stdErrorOfCoeff: Matrix<T>
     /// T values for the coefficients
+    /// https://en.wikipedia.org/wiki/Student%27s_t-test
     public let tValuesOfCoeff: Matrix<T>
     /// Probabilty values from the t-distribution
     public let pValuesOfCoeff: Matrix<T>
     /// Mean Squared Error
-    public let mse: T
+    /// https://en.wikipedia.org/wiki/Mean_squared_error
+    public let meanSquaredError: T
     /// F-statistic
     /// https://en.wikipedia.org/wiki/F-test
     public let fStat: T
     /// Probability in the f distribution
     public let fProbability: T
     
-    public init(x: Matrix<T>, y: Matrix<T>) throws {
+    public init(independentVariables x: Matrix<T>, dependentVariable y: Matrix<T>) throws {
         self.x = x
         self.y = y
         if x.rowCount != y.rowCount { throw MatrixError.mismatchedDimensions }
@@ -55,21 +62,32 @@ public struct Regression<T> where T: BinaryFloatingPoint {
         guard df > 0 else { throw RegressionError.insufficientData }
 
         let yColumn = y.column(0)
-        let mean = yColumn.reduce(0, +) / T(y.rowCount)
+
+        // The beta coefficents
         beta = try Regression.beta(for: x, given: y)
         residuals = try Regression.risiduals(of: beta, for: x, given: y)
         predicted = try x * beta
-        
-        mss = predicted.column(0).map({ square($0 - mean) }).reduce(0, +)
-        tss = y.column(0).map({ square($0 - mean) }).reduce(0, +)
 
-        let meanError = residuals.column(0).reduce(0, +) / T(residuals.rowCount)
-        ess = residuals.column(0).map({ square($0 - meanError) }).reduce(0, +)
+        // Sum of squares
+        let mean = yColumn.reduce(0, +) / T(y.rowCount)
+        modelSumOfSquares = sumOfSquares(x: predicted.column(0), mean: mean)
+        totalSumOfSquares = sumOfSquares(x: yColumn, mean: mean)
 
-        rSquared = mss/tss
-        mse = ess / T(df)
-        stdError = sqrt(mse)
-        fStat = (mss / T(p - 1)) / mse
+        let residualsColumn = residuals.column(0)
+        let meanError = residualsColumn.reduce(0, +) / T(residuals.rowCount)
+        errorSumOfSquares = sumOfSquares(x: residualsColumn, mean: meanError)
+
+        // R Squared
+        rSquared = modelSumOfSquares/totalSumOfSquares
+
+        // Mean squared error
+        meanSquaredError = errorSumOfSquares / T(df)
+
+        // Standard error
+        stdError = sqrt(meanSquaredError)
+
+        // F statistic
+        fStat = (modelSumOfSquares / T(p - 1)) / meanSquaredError
 
         let v1 = p - 1
         let v2 = df
@@ -80,8 +98,10 @@ public struct Regression<T> where T: BinaryFloatingPoint {
         let adjustment: T =  nAdj * (1 - rSquared)
         adjRSquared = 1 - adjustment
 
-        stdErrorOfCoeff = try ((mse * x.gramian().inverse()).diagonal()).map(sqrt)
+        // Standard error of the coefficients
+        stdErrorOfCoeff = try ((meanSquaredError * x.gramian().inverse()).diagonal()).map(sqrt)
 
+        // T statistic for the coefficients
         let tValues = try beta.column(0).asVector() * stdErrorOfCoeff.column(0).map { 1 / $0 }.asVector()
         tValuesOfCoeff = tValues.asComlumnMatrix()
 
@@ -109,19 +129,4 @@ public struct Regression<T> where T: BinaryFloatingPoint {
         }
         return Matrix<T>(r)
     }
-}
-
-
-/// Exponentiation to positive integer powers.
-public func exponentiation<T: BinaryFloatingPoint>(of value: T, to exponent: Int) -> T {
-    var result: T = 1
-    for _ in 0..<exponent {
-        result = result * value
-    }
-    return result
-}
-
-
-func square<T>(_ value: T) -> T where T: BinaryFloatingPoint {
-    return value * value
 }

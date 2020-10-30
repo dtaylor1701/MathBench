@@ -11,3 +11,20 @@ public func sgn<T: Numeric & Comparable>(_ x: T) -> T {
         return 0
     }
 }
+
+/// Exponentiation to positive integer powers.
+public func exponentiation<T: FloatingPoint>(of value: T, to exponent: Int) -> T {
+    var result: T = 1
+    for _ in 0..<exponent {
+        result = result * value
+    }
+    return result
+}
+
+func squared<T>(_ value: T) -> T where T: FloatingPoint {
+    return value * value
+}
+
+public func sumOfSquares<T: FloatingPoint>(x: [T], mean: T) -> T {
+    return x.map({ squared($0 - mean) }).reduce(0, +)
+}

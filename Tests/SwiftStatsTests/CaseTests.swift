@@ -143,14 +143,14 @@ class CaseTests: XCTestCase {
         let eMSS = 692.61
         let r = try Regression(x: x, y: y)
         
-        XCTAssertEqual(eMSS, r.mss, accuracy: 0.01)
+        XCTAssertEqual(eMSS, r.modelSumOfSquares, accuracy: 0.01)
     }
     
     func testTSS() throws {
         let eTSS = 693.37
         let r = try Regression(x: x, y: y)
         
-        XCTAssertEqual(eTSS, r.tss, accuracy: 0.01)
+        XCTAssertEqual(eTSS, r.totalSumOfSquares, accuracy: 0.01)
     }
     
     func testStdErrCoef() throws {

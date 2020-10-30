@@ -151,28 +151,28 @@ class SecondCaseTests: XCTestCase {
         let eMSS = 5990.8
         let r = try Regression(x: x, y: y)
 
-        XCTAssertEqual(eMSS, r.mss, accuracy: 0.1)
+        XCTAssertEqual(eMSS, r.modelSumOfSquares, accuracy: 0.1)
     }
 
     func testESS() throws {
         let eMSS = 115.2
         let r = try Regression(x: x, y: y)
 
-        XCTAssertEqual(eMSS, r.ess, accuracy: 0.1)
+        XCTAssertEqual(eMSS, r.errorSumOfSquares, accuracy: 0.1)
     }
 
     func testTSS() throws {
         let eTSS = 6105.9
         let r = try Regression(x: x, y: y)
 
-        XCTAssertEqual(eTSS, r.tss, accuracy: 0.1)
+        XCTAssertEqual(eTSS, r.totalSumOfSquares, accuracy: 0.1)
     }
 
     func testMSE() throws {
         let eMSE = 5.2
         let r = try Regression(x: x, y: y)
 
-        XCTAssertEqual(eMSE, r.mse, accuracy: 0.1)
+        XCTAssertEqual(eMSE, r.meanSquaredError, accuracy: 0.1)
     }
 
     func testFStat() throws {
