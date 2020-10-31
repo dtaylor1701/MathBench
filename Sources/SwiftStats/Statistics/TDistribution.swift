@@ -27,7 +27,7 @@ public struct TDistribution<T> where T: BinaryFloatingPoint {
     ///   - n: Degrees of the variate.
     /// - Returns: The probability that a random value would be great than or equal to `t`.
     public static func cumulativeProbability(for t: T, n: Int) -> T {
-
+        let t = abs(t)
         let betaX = T(n) / (T(n) + t * t)
         let incompleteBeta = incompleteBetaFunction(for: betaX, a: T(n) / T(2), b: 0.5)
         let beta: T = (oneHalfGamma(n) * oneHalfGamma(1)) / (oneHalfGamma(n + 1))
