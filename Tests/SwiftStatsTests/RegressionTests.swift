@@ -82,7 +82,7 @@ class RegressionTests: XCTestCase {
         let intercept: [Double] = Array.init(repeating: 1, count: weight.rowCount)
         let x = Matrix<Double>(columns: [intercept, height.column(0), heightSquared.column(0)])
         do {
-            let r = try Regression(x: x, y: weight)
+            let r = try Regression(independentVariables: x, dependentVariable: weight)
             print(r)
             print(r.csv())
             print(r.csvX())

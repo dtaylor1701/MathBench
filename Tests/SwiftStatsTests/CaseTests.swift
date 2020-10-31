@@ -113,42 +113,42 @@ class CaseTests: XCTestCase {
         let eb = Matrix<Double>([128.8128],
                                 [-143.1620],
                                 [61.9603])
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
         
         matricesEqual(a: eb, b: r.beta, accuracy: 0.0001)
     }
     
     func testRSquared() throws {
         let eR2 = 0.9989
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
 
         XCTAssertEqual(eR2, r.rSquared, accuracy: 0.0001)
     }
     
     func testAdjRSquared() throws {
         let eR = 0.9987
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
         
         XCTAssertEqual(eR, r.adjRSquared, accuracy: 0.0001)
     }
     
     func testStdErr() throws {
         let eStdErr = 0.2516
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
         
         XCTAssertEqual(eStdErr, r.stdError, accuracy: 0.0001)
     }
     
     func testMSS() throws {
         let eMSS = 692.61
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
         
         XCTAssertEqual(eMSS, r.modelSumOfSquares, accuracy: 0.01)
     }
     
     func testTSS() throws {
         let eTSS = 693.37
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
         
         XCTAssertEqual(eTSS, r.totalSumOfSquares, accuracy: 0.01)
     }
@@ -157,7 +157,7 @@ class CaseTests: XCTestCase {
         let e = Matrix<Double>([16.3083],
                                [19.8332],
                                [6.0084])
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
         
         matricesEqual(a: e, b: r.stdErrorOfCoeff, accuracy: 0.0001)
     }

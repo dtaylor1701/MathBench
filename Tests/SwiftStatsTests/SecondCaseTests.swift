@@ -76,7 +76,7 @@ class SecondCaseTests: XCTestCase {
         let eb = Matrix<Double>([2.26379143],
                                 [2.74426964],
                                 [0.01252781])
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
 
         matricesEqual(a: eb, b: r.beta, accuracy: 0.0001)
     }
@@ -108,7 +108,7 @@ class SecondCaseTests: XCTestCase {
                        [2.15],
                        [0.15])
 
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
 
         matricesEqual(a: r.residuals, b: e, accuracy: 0.1)
     }
@@ -118,7 +118,7 @@ class SecondCaseTests: XCTestCase {
                         [0.09352],
                         [0.002798]])
 
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
 
         matricesEqual(a: r.stdErrorOfCoeff, b: e, accuracy: 0.0001)
     }
@@ -126,7 +126,7 @@ class SecondCaseTests: XCTestCase {
     func testStandardError() throws {
         let e = 2.288
 
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
 
         XCTAssertEqual(r.stdError, e, accuracy: 0.001)
     }
@@ -134,7 +134,7 @@ class SecondCaseTests: XCTestCase {
     func testRSquared() throws {
         let e = 0.981
 
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
 
         XCTAssertEqual(r.rSquared, e, accuracy: 0.001)
     }
@@ -142,35 +142,35 @@ class SecondCaseTests: XCTestCase {
     func testAdjustedRSquared() throws {
         let e = 0.979
 
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
 
         XCTAssertEqual(r.adjRSquared, e, accuracy: 0.001)
     }
 
     func testMSS() throws {
         let eMSS = 5990.8
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
 
         XCTAssertEqual(eMSS, r.modelSumOfSquares, accuracy: 0.1)
     }
 
     func testESS() throws {
         let eMSS = 115.2
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
 
         XCTAssertEqual(eMSS, r.errorSumOfSquares, accuracy: 0.1)
     }
 
     func testTSS() throws {
         let eTSS = 6105.9
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
 
         XCTAssertEqual(eTSS, r.totalSumOfSquares, accuracy: 0.1)
     }
 
     func testMSE() throws {
         let eMSE = 5.2
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
 
         XCTAssertEqual(eMSE, r.meanSquaredError, accuracy: 0.1)
     }
@@ -178,7 +178,7 @@ class SecondCaseTests: XCTestCase {
     func testFStat() throws {
         let eFStat = 572.17
 
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
 
         XCTAssertEqual(eFStat, r.fStat, accuracy: 0.01)
     }
@@ -186,7 +186,7 @@ class SecondCaseTests: XCTestCase {
     func testFProbability() throws {
         let e = 0.000
 
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
         XCTAssertEqual(r.fProbability, e, accuracy: 0.01)
     }
 
@@ -194,7 +194,7 @@ class SecondCaseTests: XCTestCase {
         let e = Matrix([[2.136],
                         [29.343],
                         [4.477]])
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
         matricesEqual(a: r.tValuesOfCoeff, b: e, accuracy: 0.001)
     }
 
@@ -202,7 +202,7 @@ class SecondCaseTests: XCTestCase {
         let e = Matrix([[0.044099],
                         [0.00],
                         [1.881e-4]])
-        let r = try Regression(x: x, y: y)
+        let r = try Regression(independentVariables: x, dependentVariable: y)
         matricesEqual(a: r.pValuesOfCoeff, b: e, accuracy: 0.00001)
     }
 }
