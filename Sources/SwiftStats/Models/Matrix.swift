@@ -128,4 +128,16 @@ public struct Matrix<T: Comparable>: Equatable {
         }
         columnCount += 1
     }
+
+    public mutating func remove(rowAt index: Int) throws {
+        rows.remove(at: index)
+        rowCount -= 1
+    }
+
+    public mutating func remove(columnAt index: Int) throws {
+        for i in 0..<rows.count {
+            rows[i].remove(at: index)
+        }
+        columnCount -= 1
+    }
 }

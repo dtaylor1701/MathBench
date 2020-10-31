@@ -7,6 +7,7 @@ public extension Regression {
         }
         return rows.joined(separator: "\n")
     }
+
     func csvX() -> String {
         var rows: [String] = []
         let header = (0..<x.columnCount).map({ "Var \($0)" }).joined(separator: ",")
@@ -16,6 +17,7 @@ public extension Regression {
         }
         return rows.joined(separator: "\n")
     }
+
     func csv() -> String {
         var rows: [String] = []
         var headers = (0..<x.columnCount).map({ "Var\($0)" })

@@ -17,8 +17,8 @@ class RegressionTests: XCTestCase {
                                        [0],
                                        [0])
 
-        let beta = try Regression.beta(for: a, given: y)
-        let residuals = try Regression.risiduals(of: beta, for: a, given: y)
+        let beta = try Regression.beta(independentVariables: a, dependentVariable: y)
+        let residuals = try Regression.risiduals(beta: beta, independentVariables: a, dependentVariable: y)
 
         XCTAssertEqual(expectedB, beta)
         XCTAssertEqual(expectedR, residuals)
@@ -42,7 +42,7 @@ class RegressionTests: XCTestCase {
                                [7,2,23],
                                [3,2,53],
                                [4,2,43])
-        let beta = try Regression.beta(for: a, given: y)
+        let beta = try Regression.beta(independentVariables: a, dependentVariable: y)
         XCTAssertNotNil(beta)
     }
     

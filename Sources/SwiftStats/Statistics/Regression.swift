@@ -64,8 +64,8 @@ public struct Regression<T> where T: BinaryFloatingPoint {
         let yColumn = y.column(0)
 
         // The beta coefficents
-        beta = try Regression.beta(for: x, given: y)
-        residuals = try Regression.risiduals(of: beta, for: x, given: y)
+        beta = try Regression.beta(independentVariables: x, dependentVariable: y)
+        residuals = try Regression.risiduals(beta: beta, independentVariables: x, dependentVariable: y)
         predicted = try x * beta
 
         // Sum of squares
@@ -91,7 +91,7 @@ public struct Regression<T> where T: BinaryFloatingPoint {
 
         let v1 = p - 1
         let v2 = df
-        fProbability = FDistribution.cumulativeProbability(for: fStat, n: v1, m: v2)
+        fProbability = FDistribution.cumulativeProbability(of: fStat, n: v1, m: v2)
 
         // Adjusted R Squared
         let nAdj: T = T(n - 1) / T(n - p)
@@ -105,23 +105,33 @@ public struct Regression<T> where T: BinaryFloatingPoint {
         let tValues = try beta.column(0).asVector() * stdErrorOfCoeff.column(0).map { 1 / $0 }.asVector()
         tValuesOfCoeff = tValues.asComlumnMatrix()
 
-        let pValues = tValues.value.map { TDistribution.cumulativeProbability(for: $0, n: v2) }
+        let pValues = tValues.value.map { TDistribution.cumulativeProbability(of: $0, n: v2) }
 
         pValuesOfCoeff = Matrix(columns: [pValues])
     }
-    
-    /// Solve for the coeffecients of regression given regressors y
-    ///
-    /// - Parameter x: input
-    /// - Parameter y: Regressors
-    /// - Returns: The coeffecients of regression
-    public static func beta(for x: Matrix<T>, given y: Matrix<T>) throws -> Matrix<T> {
+
+    public func partialRegression(ofVariableAt index: Int) throws -> PartialRegression<T> {
+        let variable = x.column(index).asVector().asComlumnMatrix()
+
+        var others = x
+        try others.remove(columnAt: index)
+
+        let betaY = try Regression.beta(independentVariables: others, dependentVariable: y)
+        let betaVariable = try Regression.beta(independentVariables: others, dependentVariable: variable)
+
+        let residualsY = try Regression.risiduals(beta: betaY, independentVariables: others, dependentVariable: y)
+        let residualsVariable = try Regression.risiduals(beta: betaVariable, independentVariables: others, dependentVariable: variable)
+
+        return PartialRegression(residualsY: residualsY, residualsVar: residualsVariable)
+    }
+
+    public static func beta(independentVariables x: Matrix<T>, dependentVariable y: Matrix<T>) throws -> Matrix<T> {
         let ig = try x.gramian().inverse()
         let m = try x.moment(given: y)
         return try ig * m
     }
     
-    public static func risiduals(of beta: Matrix<T>, for x: Matrix<T>, given y: Matrix<T>) throws -> Matrix<T> {
+    public static func risiduals(beta: Matrix<T>, independentVariables x: Matrix<T>, dependentVariable y: Matrix<T>) throws -> Matrix<T> {
         var r: [[T]] = []
         for i in 0..<y.rowCount {
             let s = try y[i,0] - x.row(i) * beta.column(0)
@@ -129,4 +139,9 @@ public struct Regression<T> where T: BinaryFloatingPoint {
         }
         return Matrix<T>(r)
     }
+}
+
+public struct PartialRegression<T: BinaryFloatingPoint> {
+    public let residualsY: Matrix<T>
+    public let residualsVar: Matrix<T>
 }

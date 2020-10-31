@@ -12,7 +12,7 @@ class FDistributionTests: XCTestCase {
 
         let x = 1.0
 
-        let actual: Double = FDistribution.cumulativeProbability(for: x, n: v1, m: v2)
+        let actual: Double = FDistribution.cumulativeProbability(of: x, n: v1, m: v2)
 
         XCTAssertEqual(expected, actual, accuracy: 0.0001)
     }
@@ -26,7 +26,7 @@ class FDistributionTests: XCTestCase {
 
         let x = 572.2
 
-        let actual: Double = FDistribution.cumulativeProbability(for: x, n: v1, m: v2)
+        let actual: Double = FDistribution.cumulativeProbability(of: x, n: v1, m: v2)
 
         XCTAssertEqual(expected, actual, accuracy: 0.0000000001)
     }

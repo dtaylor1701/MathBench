@@ -7,7 +7,7 @@ public struct TDistribution<T> where T: BinaryFloatingPoint {
     ///   - t: The value in question.
     ///   - df: Degrees of the variate.
     /// - Returns: The probability of the value `t` in the distribution.
-    public static func probability(for t: T, df: Int) -> T {
+    public static func probability(of t: T, df: Int) -> T {
         let numeratorGamma: T = oneHalfGamma(df + 1)
 
         let denominatorFirstTerm = (T(df) * T.pi).squareRoot()
@@ -26,7 +26,7 @@ public struct TDistribution<T> where T: BinaryFloatingPoint {
     ///   - t: The value in question.
     ///   - n: Degrees of the variate.
     /// - Returns: The probability that a random value would be great than or equal to `t`.
-    public static func cumulativeProbability(for t: T, n: Int) -> T {
+    public static func cumulativeProbability(of t: T, n: Int) -> T {
         let t = abs(t)
         let betaX = T(n) / (T(n) + t * t)
         let incompleteBeta = incompleteBetaFunction(for: betaX, a: T(n) / T(2), b: 0.5)

@@ -9,7 +9,7 @@ public struct FDistribution<T> where T: BinaryFloatingPoint  {
     ///   - n: Degrees of the first variate.
     ///   - m: Degrees of freedome of the second variate.
     /// - Returns: The probability that a random value would be great than or equal to `x`.
-    public static func cumulativeProbability(for x: T, n: Int, m: Int) -> T {
+    public static func cumulativeProbability(of x: T, n: Int, m: Int) -> T {
         let z: T = (T(n) * x) / (T(m) + T(n) * x)
         let a: T = T(n) / T(2)
         let b: T = T(m) / T(2)
@@ -33,7 +33,7 @@ public struct FDistribution<T> where T: BinaryFloatingPoint  {
     ///   - n: Degrees of the first variate.
     ///   - m: Degrees of freedome of the second variate.
     /// - Returns: The probability of the value `f` in the distribution.
-    public static func probability(for f: T, n: Int, m: Int) -> T {
+    public static func probability(of f: T, n: Int, m: Int) -> T {
         let n1 = exponentiation(of: T(m), to: m).squareRoot()
         let n2 = exponentiation(of: T(n), to: n).squareRoot()
         let n3 = exponentiation(of: f, to: n).squareRoot() * T(1) / f
@@ -43,8 +43,8 @@ public struct FDistribution<T> where T: BinaryFloatingPoint  {
         return (n1 * n2 * n3) / (d1 * dBeta)
     }
 
-    /// Alternative approache to probability(for f: T, n: Int, m: Int)
-    public static func __probability0(for f: T, n: Int, m: Int) -> T {
+    /// Alternative approache to probability(of f: T, n: Int, m: Int)
+    public static func __probability0(of f: T, n: Int, m: Int) -> T {
         let nFirstTerm: T = oneHalfGamma(n + m)
         let nSecondTerm = exponentiation(of: T(n), to: n).squareRoot()
         let nThirdTerm = exponentiation(of: T(m), to: m).squareRoot()
@@ -61,8 +61,8 @@ public struct FDistribution<T> where T: BinaryFloatingPoint  {
         return numerator / denominator
     }
 
-    /// Alternative approache to probability(for f: T, n: Int, m: Int)
-    public static func __probability1(for x: T, n: Int, m: Int) -> T {
+    /// Alternative approache to probability(of f: T, n: Int, m: Int)
+    public static func __probability1(of x: T, n: Int, m: Int) -> T {
         guard x > 0 else { return 0 }
         let x1 = exponentiation(of: (T(n) * x), to: n)
         let x2 = exponentiation(of: T(m), to: m)

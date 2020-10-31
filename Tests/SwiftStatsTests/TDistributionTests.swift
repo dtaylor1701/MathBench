@@ -11,7 +11,7 @@ class TDistributionTests: XCTestCase {
 
         let x = 2.14
 
-        let actual: Double = TDistribution.cumulativeProbability(for: x, n: n)
+        let actual: Double = TDistribution.cumulativeProbability(of: x, n: n)
 
         XCTAssertEqual(expected, actual, accuracy: 0.001)
     }

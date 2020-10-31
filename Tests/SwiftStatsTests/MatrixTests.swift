@@ -227,4 +227,25 @@ class MatrixTests: XCTestCase {
 
         matricesEqual(a: a, b: expected, accuracy: 0.000001)
     }
+
+    func testRemoveRow() throws {
+        var a = Matrix<Double>([2, 4],
+                               [5, 6])
+
+        let expected = Matrix<Double>([5, 6])
+        try a.remove(rowAt: 0)
+
+        matricesEqual(a: a, b: expected, accuracy: 0.000001)
+    }
+
+    func testRemoveColumn() throws {
+        var a = Matrix<Double>([2, 4],
+                               [5, 3])
+
+        let expected = Matrix<Double>([2],
+                                      [5])
+        try a.remove(columnAt: 1)
+
+        matricesEqual(a: a, b: expected, accuracy: 0.000001)
+    }
 }
