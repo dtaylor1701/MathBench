@@ -1,5 +1,5 @@
 import XCTest
-import SwiftStats
+import MathBench
 
 class RegressionTests: XCTestCase {
     func testFindBeta() throws {

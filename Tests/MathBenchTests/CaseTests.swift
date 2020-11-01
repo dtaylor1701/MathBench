@@ -1,4 +1,4 @@
-@testable import SwiftStats
+import MathBench
 import XCTest
 
 class CaseTests: XCTestCase {

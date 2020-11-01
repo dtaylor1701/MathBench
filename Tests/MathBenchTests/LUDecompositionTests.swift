@@ -1,5 +1,5 @@
 import XCTest
-import SwiftStats
+import MathBench
 
 class LUDecompositionTests: XCTestCase {
     func testDecomposition3x3() {

@@ -1,5 +1,5 @@
 import XCTest
-import SwiftStats
+import MathBench
 
 class MathTests: XCTestCase {
     func testDotProduct(){

@@ -1,5 +1,5 @@
 import XCTest
-import SwiftStats
+import MathBench
 
 class MatrixTests: XCTestCase {
     func testPrint() throws {

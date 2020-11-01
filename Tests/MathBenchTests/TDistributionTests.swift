@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-import SwiftStats
+import MathBench
 
 class TDistributionTests: XCTestCase {
     func testFDistribution() throws {

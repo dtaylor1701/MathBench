@@ -1,5 +1,5 @@
 import XCTest
-import SwiftStats
+import MathBench
 
 class GammaTests: XCTestCase {
     func testOne() throws {
