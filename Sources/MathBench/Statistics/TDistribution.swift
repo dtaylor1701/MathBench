@@ -33,7 +33,7 @@ public struct TDistribution<T> where T: BinaryFloatingPoint {
         let beta: T = (oneHalfGamma(n) * oneHalfGamma(1)) / (oneHalfGamma(n + 1))
         let regularized = incompleteBeta / beta
 
-        let totalProbability = 1.0 - 0.5 * regularized * sgn(t)
+        let totalProbability = 1.0 - 0.5 * regularized
 
         return (1 - totalProbability) * 2
     }

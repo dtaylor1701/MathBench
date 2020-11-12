@@ -3,7 +3,7 @@ import XCTest
 import MathBench
 
 class TDistributionTests: XCTestCase {
-    func testFDistribution() throws {
+    func testCumulativeProbability() throws {
 
         let expected = 0.0437
 
@@ -16,3 +16,4 @@ class TDistributionTests: XCTestCase {
         XCTAssertEqual(expected, actual, accuracy: 0.001)
     }
 }
+
