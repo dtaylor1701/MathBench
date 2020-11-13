@@ -32,10 +32,9 @@ public func factorial<T: BinaryFloatingPoint>(_ n: Int) -> T {
 /// Finds the incomplete beta function using numerical integration.
 public func incompleteBetaFunction<T: BinaryFloatingPoint>(for z: T, a: T, b: T) -> T {
     let function: (T) -> T = { u in
-        guard u != 0 else { return 0 }
-        let firstTerm = pow(Double(u), Double(a - 1))
-        let secondTerm = pow(Double(1 - u), Double(b - 1))
-        return T(firstTerm * secondTerm)
+        let firstTerm = exponentiation(of: u, to: a - 1)
+        let secondTerm = exponentiation(of: 1 - u, to: b - 1)
+        return firstTerm * secondTerm
     }
 
     return integrate(function: function, from: 0, to: z, resolution: 10000)

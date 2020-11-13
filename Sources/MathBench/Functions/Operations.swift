@@ -21,6 +21,16 @@ public func exponentiation<T: FloatingPoint>(of value: T, to exponent: Int) -> T
     return result
 }
 
+public func exponentiation<T: BinaryFloatingPoint>(of value: T, to exponent: T) -> T {
+    if exponent == 0 {
+        return 1
+    } else if value == 0 {
+        return 0
+    } else {
+        return T(pow(Double(value), Double(exponent)))
+    }
+}
+
 func squared<T>(_ value: T) -> T where T: FloatingPoint {
     return value * value
 }

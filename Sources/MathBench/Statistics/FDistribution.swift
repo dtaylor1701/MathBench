@@ -5,12 +5,12 @@ public struct FDistribution<T> where T: BinaryFloatingPoint  {
     /// Approximates the cummulative probability of some value `x`
     /// being greater than or equal to a random value in the distribution.
     /// - Parameters:
-    ///   - x: The value in question.
+    ///   - f: The value in question.
     ///   - n: Degrees of the first variate.
     ///   - m: Degrees of freedome of the second variate.
     /// - Returns: The probability that a random value would be great than or equal to `x`.
-    public static func cumulativeProbability(of x: T, n: Int, m: Int) -> T {
-        let z: T = (T(n) * x) / (T(m) + T(n) * x)
+    public static func cumulativeProbability(of f: T, n: Int, m: Int) -> T {
+        let z: T = (T(n) * f) / (T(m) + T(n) * f)
         let a: T = T(n) / T(2)
         let b: T = T(m) / T(2)
 
@@ -62,17 +62,17 @@ public struct FDistribution<T> where T: BinaryFloatingPoint  {
     }
 
     /// Alternative approache to probability(of f: T, n: Int, m: Int)
-    public static func __probability1(of x: T, n: Int, m: Int) -> T {
-        guard x > 0 else { return 0 }
-        let x1 = exponentiation(of: (T(n) * x), to: n)
+    public static func __probability1(of f: T, n: Int, m: Int) -> T {
+        guard f > 0 else { return 0 }
+        let x1 = exponentiation(of: (T(n) * f), to: n)
         let x2 = exponentiation(of: T(m), to: m)
 
-        let x3 = exponentiation(of: (T(n) * x + T(m)), to: n + m)
+        let x3 = exponentiation(of: (T(n) * f + T(m)), to: n + m)
 
         let numerator = (x1 * x2 / x3).squareRoot()
 
         let dBeta: T = (oneHalfGamma(n) * oneHalfGamma(m)) / (oneHalfGamma(n + m))
-        let denominator = x * dBeta
+        let denominator = f * dBeta
 
         return numerator / denominator
     }
