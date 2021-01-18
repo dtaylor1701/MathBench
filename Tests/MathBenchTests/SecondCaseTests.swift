@@ -180,7 +180,7 @@ class SecondCaseTests: XCTestCase {
 
         let r = try Regression(independentVariables: x, dependentVariable: y)
 
-        XCTAssertEqual(eFStat, r.fStat, accuracy: 0.01)
+        XCTAssertEqual(eFStat, r.fValue, accuracy: 0.01)
     }
 
     func testFProbability() throws {

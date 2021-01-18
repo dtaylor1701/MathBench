@@ -2,6 +2,7 @@ import Foundation
 
 public enum RegressionError: Error {
     case insufficientData
+    case insufficientIndependentVariables
 }
 
 /// Generates regression analysis of the form Y = βX + ε.
@@ -44,9 +45,9 @@ public struct Regression<T> where T: BinaryFloatingPoint {
     /// Mean Squared Error
     /// https://en.wikipedia.org/wiki/Mean_squared_error
     public let meanSquaredError: T
-    /// F-statistic
+    /// F value
     /// https://en.wikipedia.org/wiki/F-test
-    public let fStat: T
+    public let fValue: T
     /// Probability in the f distribution
     public let fProbability: T
     
@@ -60,6 +61,9 @@ public struct Regression<T> where T: BinaryFloatingPoint {
 
         // There must be more than zero degrees of freedom.
         guard df > 0 else { throw RegressionError.insufficientData }
+
+        // There must be enough indpendent variables. Perhaps an intercept was not included.
+        guard p > 1 else { throw RegressionError.insufficientIndependentVariables }
 
         let yColumn = y.column(0)
 
@@ -87,11 +91,11 @@ public struct Regression<T> where T: BinaryFloatingPoint {
         stdError = sqrt(meanSquaredError)
 
         // F statistic
-        fStat = (modelSumOfSquares / T(p - 1)) / meanSquaredError
+        fValue = (modelSumOfSquares / T(p - 1)) / meanSquaredError
 
         let v1 = p - 1
         let v2 = df
-        fProbability = FDistribution.cumulativeProbability(of: fStat, n: v1, m: v2)
+        fProbability = FDistribution.cumulativeProbability(of: fValue, n: v1, m: v2)
 
         // Adjusted R Squared
         let nAdj: T = T(n - 1) / T(n - p)

@@ -19,6 +19,7 @@ public func oneHalfGamma<T: BinaryFloatingPoint>(_ n: Int) -> T {
 }
 
 public func factorial<T: BinaryFloatingPoint>(_ n: Int) -> T {
+    guard n >= 0 else { return .infinity }
     switch n {
     case 0:
         return 1
